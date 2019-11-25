@@ -4,7 +4,7 @@
 
 import pygame
 import os
-import Board
+from components import Board
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 

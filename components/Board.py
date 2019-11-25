@@ -2,8 +2,8 @@ import pygame
 import os
 import numpy as np
 
-white_circle = pygame.image.load(os.path.join('assets', 'white.png'))
-black_circle = pygame.image.load(os.path.join('assets', 'black.png'))
+white_circle = pygame.image.load(os.path.join('../assets', 'white.png'))
+black_circle = pygame.image.load(os.path.join('../assets', 'black.png'))
 
 
 def draw_table(surface):
