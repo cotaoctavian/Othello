@@ -1,6 +1,4 @@
 # Othello
-AI Project
-
 ### Team: 
    * Băcăoanu Adriana-Bianca
    * Chiperi Andrei
