@@ -276,8 +276,6 @@ class Board:
 
         return set(all_moves)
 
-    # TODO -> changing piece's color on every direction (diagonal, vertical, horizontal)
-    #  at the same time after placing a piece
     def change_color(self, pos_x, pos_y, color):
         directions = dict()
         if pos_x + 1 < 8:
