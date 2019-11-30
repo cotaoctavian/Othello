@@ -432,8 +432,4 @@ class Board:
 
     def set_move(self, pos_x, pos_y, color):
         self.board[pos_x, pos_y] = color
-        if color == 'B':
-            opposite_color = 'W'
-        else:
-            opposite_color = 'B'
         self.change_color(pos_x, pos_y, color)
