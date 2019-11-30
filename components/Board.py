@@ -278,7 +278,152 @@ class Board:
 
     # TODO -> changing piece's color on every direction (diagonal, vertical, horizontal)
     #  at the same time after placing a piece
-    def change_color(self, pos_x, pos_y, color, opposite_color):
+    def change_color(self, pos_x, pos_y, color):
+        directions = dict()
+        if pos_x + 1 < 8:
+            if self.board[pos_x + 1][pos_y] != color and self.board[pos_x + 1][pos_y] != "-":
+                flag = True
+                for i in range(pos_x + 2, 8):
+                    if self.board[i][pos_y] == '-':
+                        flag = False
+                    if self.board[i][pos_y] == color and flag is True:
+                        directions['vertical_jos'] = (i, pos_y)
+                        break
+
+        if pos_x - 1 > -1:
+            if self.board[pos_x - 1][pos_y] != color and self.board[pos_x - 1][pos_y] != "-":
+                flag = True
+                for i in range(pos_x - 2, -1, -1):
+                    if self.board[i][pos_y] == '-':
+                        flag = False
+                    if self.board[i][pos_y] == color and flag is True:
+                        directions['vertical_sus'] = (i, pos_y)
+                        break
+
+        if pos_y + 1 < 8:
+            if self.board[pos_x][pos_y + 1] != color and self.board[pos_x][pos_y + 1] != "-":
+                flag = True
+                for i in range(pos_y + 2, 8):
+                    if self.board[pos_x][i] == "-":
+                        flag = False
+                    if self.board[pos_x][i] == color and flag is True:
+                        directions['orizontal_dreapta'] = (pos_x, i)
+                        break
+
+        if pos_y - 1 > -1:
+            if self.board[pos_x][pos_y - 1] != color and self.board[pos_x][pos_y - 1] != "-":
+                flag = True
+                for i in range(pos_y - 2, -1, -1):
+                    if self.board[pos_x][i] == "-":
+                        flag = False
+                    if self.board[pos_x][i] == color and flag is True:
+                        directions['orizontal_stanga'] = (pos_x, i)
+                        break
+
+        if pos_x + 1 < 8 and pos_y + 1 < 8:
+            if self.board[pos_x + 1][pos_y + 1] != color and self.board[pos_x + 1][pos_y + 1] != "-":
+                flag = True
+                i, j = pos_x + 2, pos_y + 2
+                while i < 8 and j < 8:
+                    if self.board[i][j] == "-":
+                        flag = False
+                    if self.board[i][j] == color and flag is True:
+                        directions['dp_descendent'] = (i, j)
+                        break
+                    i += 1
+                    j += 1
+
+        if pos_x - 1 > -1 and pos_y - 1 > -1:
+            if self.board[pos_x - 1][pos_y - 1] != color and self.board[pos_x - 1][pos_y - 1] != "-":
+                flag = True
+                i, j = pos_x - 2, pos_y - 2
+                while i > -1 and j > - 1:
+                    if self.board[i][j] == "-":
+                        flag = False
+                    if self.board[i][j] == color and flag is True:
+                        directions['dp_ascendent'] = (i, j)
+                        break
+                    i -= 1
+                    j -= 1
+
+        if pos_x + 1 < 8 and pos_y - 1 > -1:
+            if self.board[pos_x + 1][pos_y - 1] != color and self.board[pos_x + 1][pos_y - 1] != "-":
+                flag = True
+                i, j = pos_x + 2, pos_y - 2
+                while i < 8 and j > -1:
+                    if self.board[i][j] == "-":
+                        flag = False
+                    if self.board[i][j] == color and flag is True:
+                        directions['ds_descendent'] = (i, j)
+                        break
+                    i += 1
+                    j -= 1
+
+        if pos_x - 1 > -1 and pos_y + 1 < 8:
+            if self.board[pos_x - 1][pos_y + 1] != color and self.board[pos_x - 1][pos_y + 1] != "-":
+                flag = True
+                i, j = pos_x - 2, pos_y + 2
+                while i > -1 and j < 8:
+                    if self.board[i][j] == "-":
+                        flag = False
+                    if self.board[i][j] == color and flag is True:
+                        directions['ds_ascendent'] = (i, j)
+                        break
+                    i -= 1
+                    j += 1
+
+        if 'vertical_jos' in directions.keys():
+            x, y = directions['vertical_jos']
+            for i in range(pos_x + 1, x):
+                self.board[i][pos_y] = color
+
+        if 'vertical_sus' in directions.keys():
+            x, y = directions['vertical_sus']
+            for i in range(pos_x - 1, x, -1):
+                self.board[i][pos_y] = color
+
+        if 'orizontal_dreapta' in directions.keys():
+            x, y = directions['orizontal_dreapta']
+            for i in range(pos_y + 1, y):
+                self.board[pos_x][i] = color
+
+        if 'orizontal_stanga' in directions.keys():
+            x, y = directions['orizontal_stanga']
+            for i in range(pos_y - 1, y, -1):
+                self.board[pos_x][i] = color
+
+        if 'dp_descendent' in directions.keys():
+            x, y = directions['dp_descendent']
+            i, j = pos_x + 1, pos_y + 1
+            while i < x and j < y:
+                self.board[i][j] = color
+                i += 1
+                j += 1
+
+        if 'dp_ascendent' in directions.keys():
+            x, y = directions['dp_ascendent']
+            i, j = pos_x - 1, pos_y - 1
+            while i > x and j > y:
+                self.board[i][j] = color
+                i -= 1
+                j -= 1
+
+        if 'ds_descendent' in directions.keys():
+            x, y = directions['ds_descendent']
+            i, j = pos_x + 1, pos_y - 1
+            while i < x and j > y:
+                self.board[i][j] = color
+                i += 1
+                j -= 1
+
+        if 'ds_ascendent' in directions.keys():
+            x, y = directions['ds_ascendent']
+            i, j = pos_x - 1, pos_y + 1
+            while i > x and j < y:
+                self.board[i][j] = color
+                i -= 1
+                j += 1
+
         return self.board
 
     def print_matrix(self):
@@ -289,8 +434,8 @@ class Board:
 
     def set_move(self, pos_x, pos_y, color):
         self.board[pos_x, pos_y] = color
-        """if color == 'B':
+        if color == 'B':
             opposite_color = 'W'
         else:
             opposite_color = 'B'
-        self.change_color(pos_x, pos_y, color, opposite_color)"""
+        self.change_color(pos_x, pos_y, color)
