@@ -1,10 +1,10 @@
 # Othello Project
-# Team: Băcăoanu Adriana-Bianca, Chiperi Andrei, Coța Ștefan-Octavian, Pătrașcu Deny
+# Team: BÄcÄoanu Adriana-Bianca, Chiperi Andrei, CoÈa Ètefan-Octavian, PÄtraÈcu Deny
 # Group: 3A1
 
 import pygame
 import os
-from components import Board
+import Board
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -35,7 +35,8 @@ while running:
                         if player == 'B':
                             player = 'W'
             else:
-                table.mini_max_strategy()
+                #table.mini_max_strategy()
+                table.random_strategy()
                 player = "B"
         else:
             running = False
