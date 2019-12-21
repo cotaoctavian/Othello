@@ -1,5 +1,5 @@
 # Othello Project
-# Team: BÄcÄoanu Adriana-Bianca, Chiperi Andrei, CoÈa Ètefan-Octavian, PÄtraÈcu Deny
+# Team: Băcăoanu Adriana-Bianca, Chiperi Andrei, Coța Ștefan-Octavian, Pătrașcu Deny
 # Group: 3A1
 
 import pygame

@@ -738,15 +738,15 @@ class Board:
                         break
         else:
             self.board = best_state
-  # ---------------------- RANDOM -------------------------------------------
+
+    # ---------------------- RANDOM -------------------------------------------
     def random_piece_pick(self):
         possible_moves = list(self.generate_possible_moves("B", self.board, True))
-        print(possible_moves)
         result_move = random.choice(possible_moves)
         return result_move
+
     def random_strategy(self):
         move = list(self.random_piece_pick())
         x = move[0]
         y = move[1]
-        self.board[x,y]="W"
-        
+        self.board[x, y] = "W"
