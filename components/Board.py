@@ -70,6 +70,26 @@ class Board:
 
             print(f"Final score: \nB = {no_of_blacks} - W = {no_of_whites}")
             return True
+        else:
+            # The game is done before the table is complete
+            whites, blacks = 0, 0
+            for i in range(8):
+                for j in range(8):
+                    if self.board[i, j] == "W":
+                        whites += 1
+                    elif self.board[i, j] == "B":
+                        blacks += 1
+
+            if whites + blacks == abs(whites - blacks):
+                if whites != 0:
+                    print("The bot won!")
+                    print(f"Final score: \nB = {blacks} - W = {whites}")
+                else:
+                    print("You won!")
+                    print(f"Final score: \nB = {blacks} - W = {whites}")
+
+                return True
+
         return False
 
     # Used to check on horizontal line for possible places
