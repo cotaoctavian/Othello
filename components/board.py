@@ -42,13 +42,16 @@ class Board:
         ])
 
     # Draw pieces
-    def draw(self, surface):
+    def draw(self, surface, last_position=None):
         for i in range(8):
             for j in range(8):
                 if self.board[i, j] == 'B':
                     surface.blit(black_circle, (j * 100 + 12.5, i * 100 + 12.5))
                 elif self.board[i, j] == 'W':
                     surface.blit(white_circle, (j * 100 + 12.5, i * 100 + 12.5))
+        if last_position is not None:
+            i, j = last_position
+            pygame.draw.circle(surface, (255, 0, 0), (j * 100 + 50, i * 100 + 50), 4)
 
     # Print score and check if your state is final
     def is_final(self):
@@ -353,7 +356,7 @@ class Board:
 
         return set(all_moves)
 
-    # Change the color of pieces for Black / White - but we're using it only for BLACK round -> Black = Human
+    # Change the color of pieces for Black / White
     def change_color(self, pos_x, pos_y, color):
         directions = dict()
         if pos_x + 1 < 8:
@@ -502,18 +505,57 @@ class Board:
 
         return self.board
 
-    def print_matrix(self):
-        for i in range(8):
-            for j in range(8):
-                print(self.board[i, j], (i, j), end='')
-            print()
-
-    # Set move for HUMAN
+    # Set move
     def set_move(self, pos_x, pos_y, color):
         self.board[pos_x, pos_y] = color
         self.change_color(pos_x, pos_y, color)
 
     # --------------------  STRATEGIES ------------------------------------------
+
+    # ---------------------- RANDOM -------------------------------------------
+
+    def random_piece_pick(self):
+        possible_moves = list(self.generate_possible_moves("B", self.board, True))
+        result_move = random.choice(possible_moves)
+        return result_move
+
+    def random_strategy(self):
+        move = list(self.random_piece_pick())
+        x = move[0]
+        y = move[1]
+        self.board[x, y] = "W"
+        return x, y
+
+    # ---------------- LOCAL MAXIMIZATION -------------------------------------
+
+    # Returns the number of white and black pieces
+    def count_pieces(self):
+        return np.count_nonzero(self.board == 'W'), np.count_nonzero(self.board == 'B')
+
+    # Takes decisions for computer, every move has a certain reward
+    def local_maximization_strategy(self, current_player='W'):
+        possible_moves = list(self.generate_possible_moves(current_player, self.board, True))
+        rewards = list()
+        backup_board = copy.deepcopy(self.board)
+
+        for position in possible_moves:
+            self.set_move(position[0], position[1], current_player)
+            no_of_whites, no_of_blacks = self.count_pieces()
+
+            if current_player == 'W':
+                rewards.append(no_of_whites)
+            else:
+                rewards.append(no_of_blacks)
+
+            self.board = copy.deepcopy(backup_board)
+
+        if len(rewards) > 0:
+            best_move = possible_moves[np.argmax(rewards)]
+            self.set_move(best_move[0], best_move[1], current_player)
+            return best_move
+
+        return None
+
     # ---------------------- MINI MAX -------------------------------------------
 
     # Transform a position from possible moves into a state for computer
@@ -739,14 +781,10 @@ class Board:
         else:
             self.board = best_state
 
-    # ---------------------- RANDOM -------------------------------------------
-    def random_piece_pick(self):
-        possible_moves = list(self.generate_possible_moves("B", self.board, True))
-        result_move = random.choice(possible_moves)
-        return result_move
+    # --------------------------- DEBUG ---------------------------------------
 
-    def random_strategy(self):
-        move = list(self.random_piece_pick())
-        x = move[0]
-        y = move[1]
-        self.board[x, y] = "W"
+    def print_matrix(self):
+        for i in range(8):
+            for j in range(8):
+                print('[({}, {}) {}] '.format(i, j, self.board[i, j], ), end='')
+            print()
