@@ -779,7 +779,69 @@ class Board:
                         self.board[i, j] = "W"
                         break
         else:
+            last_position = self.compare_states(best_state)
             self.board = best_state
+            return last_position
+
+    # -------------------- α-β Pruning ----------------------------------------
+
+    def compare_states(self, state):
+        last_position = None
+        for i in range(8):
+            for j in range(8):
+                if self.board[i, j] == '-':
+                    if state[i, j] == 'W' or state[i, j] == 'B':
+                        last_position = (i, j)
+        return last_position
+
+    def alpha_beta(self, current_state, maximized_level, current_depth, alpha, beta, best_one):
+        if current_depth == 0 or self.final_state(current_state) is True:
+            return None, self.heuristic_function(current_state)
+
+        if maximized_level is True:
+            value = -np.Inf
+            possible_states = self.generate_possible_moves('W', current_state, True)
+            for i in possible_states:
+                copy_of_current_state = copy.deepcopy(current_state)
+                new_state = self.set_state_move(copy_of_current_state, i[0], i[1], 'W')
+                _, new_val = self.alpha_beta(new_state, False, current_depth - 1, alpha, beta, best_one)
+                if new_val > value:
+                    value = new_val
+                    best_one = new_state
+                if value > alpha:
+                    alpha = value
+                if alpha >= beta:
+                    break
+            return best_one, value
+        else:
+            value = np.Inf
+            possible_states = self.generate_possible_moves('B', current_state, True)
+            for i in possible_states:
+                copy_of_current_state = copy.deepcopy(current_state)
+                new_state = self.set_state_move(copy_of_current_state, i[0], i[1], 'B')
+                _, new_val = self.alpha_beta(new_state, True, current_depth - 1, alpha, beta, best_one)
+                if new_val < value:
+                    value = new_val
+                    best_one = new_state
+                if value < beta:
+                    beta = value
+                if beta <= alpha:
+                    break
+            return best_one, value
+
+    # Function to call the mini max algorithm
+    def alpha_beta_strategy(self):
+        best_state, value = self.alpha_beta(self.board, True, 1, -np.Inf, np.Inf, None)
+        if best_state is None:
+            for i in range(8):
+                for j in range(8):
+                    if self.board[i, j] == "-":
+                        self.board[i, j] = "W"
+                        break
+        else:
+            last_position = self.compare_states(best_state)
+            self.board = best_state
+            return last_position
 
     # --------------------------- DEBUG ---------------------------------------
 
