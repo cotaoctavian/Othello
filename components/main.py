@@ -20,7 +20,7 @@ def run_game(delay=None):
     running = True
     player = 'B'
 
-    positions = None      # valid positions for the human player
+    positions = None  # valid positions for the human player
     last_position = None  # position of red dot
 
     while running:
@@ -52,7 +52,8 @@ def run_game(delay=None):
                     # last_position = table.random_strategy()
                     # last_position = table.local_maximization_strategy()
                     # last_position = table.mini_max_strategy()
-                    last_position = table.alpha_beta_strategy()
+                    # last_position = table.alpha_beta_strategy()
+                    last_position = table.negamax_strategy()
                     player = "B"
             else:
                 running = False

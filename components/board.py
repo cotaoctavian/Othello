@@ -843,6 +843,48 @@ class Board:
             self.board = best_state
             return last_position
 
+    # -----------------------------NEGAMAX-------------------------------------
+    def negamax(self, current_state, current_depth, color, best_one):
+        if current_depth == 0 or self.final_state(current_state) is True:
+            return None, self.heuristic_function(current_state)
+        if color == "W":
+            value = -np.Inf
+            possible_states = self.generate_possible_moves("W", current_state, True)
+            for i in possible_states:
+                copy_of_current_state = copy.deepcopy(current_state)
+                new_state = self.set_state_move(copy_of_current_state, i[0], i[1], "W")
+                _, new_val = self.negamax(new_state, current_depth - 1, "B", best_one)
+                if -new_val > value:
+                    value = new_val
+                    best_one = new_state
+
+            return best_one, value
+        elif color == "B":
+            value = -np.Inf
+            possible_states = self.generate_possible_moves("B", current_state, True)
+            for i in possible_states:
+                copy_of_current_state = copy.deepcopy(current_state)
+                new_state = self.set_state_move(copy_of_current_state, i[0], i[1], "B")
+                _, new_val = self.negamax(new_state, current_depth - 1, "W", best_one)
+                if -new_val > value:
+                    value = new_val
+                    best_one = new_state
+
+            return best_one, value
+
+    def negamax_strategy(self):
+        best_state, value = self.negamax(self.board, 1, "W", None)
+        if best_state is None:
+            for i in range(8):
+                for j in range(8):
+                    if self.board[i, j] == "-":
+                        self.board[i, j] = "W"
+                        break
+        else:
+            last_position = self.compare_states(best_state)
+            self.board = best_state
+            return last_position
+
     # --------------------------- DEBUG ---------------------------------------
 
     def print_matrix(self):
