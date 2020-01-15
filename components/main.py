@@ -49,11 +49,11 @@ def run_game(delay=None):
                                 pygame.time.wait(delay)
                 else:
                     # The turn of the computer
-                    # last_position = table.random_strategy()
+                    last_position = table.random_strategy()
                     # last_position = table.local_maximization_strategy()
                     # last_position = table.mini_max_strategy()
                     # last_position = table.alpha_beta_strategy()
-                    last_position = table.negamax_strategy()
+                    # last_position = table.negamax_strategy()
                     player = "B"
             else:
                 running = False

@@ -514,13 +514,98 @@ class Board:
 
     # ---------------------- RANDOM -------------------------------------------
 
-    def random_piece_pick(self):
+    # 1. I choose a random move from corners, if exists
+    def ifIsInCorner(self, x, y):
+        return (x == 7 and y == 7) or (x == 7 and y == 0) or (x == 0 and y == 7) or (x == 0 and y == 0)
+
+    # 2. I choose a random position near the main square, if exists
+    def ifIsNearMainSquare(self, x, y):
+        for i in range(2, 6):
+            for j in range(2, 6):
+                if (x == i and y == j):
+                    return True
+        return False
+
+    # 3. I choose a random position along an edge, but not next to a corner
+    def ifIsAlongTheEdgeButNotNextToACorner(self, x, y):
+        for j in range(2, 6):
+            if x == 0 and y == j:
+                return True
+        for i in range(2, 6):
+            if x == i and y == 0:
+                return True
+        for i in range(2, 6):
+            if x == i and y == 7:
+                return True
+        for j in range(2, 6):
+            if x == 7 and y == j:
+                return True
+
+    # 4. I choose a random position on inner edges, but not diagonal fromo the corner
+    def ifIsOnInnerEdges(self, x, y):
+        for j in range(2, 6):
+            if x == 1 and y == j:
+                return True
+        for i in range(2, 6):
+            if x == i and y == 1:
+                return True
+        for i in range(2, 6):
+            if x == i and y == 6:
+                return True
+        for j in range(2, 6):
+            if x == 6 and y == j:
+                return True
+
+    # 5. I choose a random from squares surrounding a corner
+    def isIsSurrundingACorner(self, x, y):
+        if (x == 0 and y == 1) or (x == 1 and y == 0) or (x == 1 and y == 1) or (x == 0 and y == 6) or (
+                x == 1 and y == 6) or (x == 1 and y == 7):
+            return True
+        if (x == 6 and y == 0) or (x == 6 and y == 1) or (x == 1 and y == 7) or (x == 6 and y == 6) or (
+                x == 7 and y == 6) or (x == 6 and y == 7):
+            return True
+
+    def best_move_random_pick(self):
         possible_moves = list(self.generate_possible_moves("B", self.board, True))
-        result_move = random.choice(possible_moves)
-        return result_move
+        temp_moves = []
+        # 1.
+        for move in possible_moves:
+            if (self.ifIsInCorner(move[0], move[1])):
+                temp_moves.append(move)
+        if (temp_moves):
+            result_move = random.choice(temp_moves)
+            return result_move
+        # 2.
+        for move in possible_moves:
+            if (self.ifIsNearMainSquare(move[0], move[1])):
+                temp_moves.append(move)
+        if (temp_moves):
+            result_move = random.choice(temp_moves)
+            return result_move
+        # 3.
+        for move in possible_moves:
+            if (self.ifIsAlongTheEdgeButNotNextToACorner(move[0], move[1])):
+                temp_moves.append(move)
+        if (temp_moves):
+            result_move = random.choice(temp_moves)
+            return result_move
+        # 4.
+        for move in possible_moves:
+            if (self.ifIsOnInnerEdges(move[0], move[1])):
+                temp_moves.append(move)
+        if (temp_moves):
+            result_move = random.choice(temp_moves)
+            return result_move
+        # 5.
+        for move in possible_moves:
+            if (self.isIsSurrundingACorner(move[0], move[1])):
+                temp_moves.append(move)
+        if (temp_moves):
+            result_move = random.choice(temp_moves)
+            return result_move
 
     def random_strategy(self):
-        move = list(self.random_piece_pick())
+        move = list(self.best_move_random_pick())
         x = move[0]
         y = move[1]
         self.board[x, y] = "W"
