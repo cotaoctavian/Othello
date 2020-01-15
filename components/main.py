@@ -51,6 +51,7 @@ def run_game(delay=None):
                     # The turn of the computer
                     last_position = table.random_strategy()
                     # last_position = table.local_maximization_strategy()
+                    # last_position = table.maximization_strategy()
                     # last_position = table.mini_max_strategy()
                     # last_position = table.alpha_beta_strategy()
                     # last_position = table.negamax_strategy()

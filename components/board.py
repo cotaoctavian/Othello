@@ -641,6 +641,64 @@ class Board:
 
         return None
 
+    # ---------------- GENERAL MAXIMIZATION -------------------------------
+
+    def maximization_strategy(self, current_player='W'):
+        backup_board1 = copy.deepcopy(self.board)
+        possible_moves1 = list(self.generate_possible_moves(current_player, self.board, True))
+        rewards = dict()
+        history = dict()
+
+        for i, p1 in enumerate(possible_moves1):
+            self.set_move(p1[0], p1[1], current_player)
+            backup_board2 = copy.deepcopy(self.board)
+
+            if current_player == 'W':
+                next_player = 'B'
+            else:
+                next_player = 'W'
+
+            possible_moves2 = list(self.generate_possible_moves(next_player, self.board, True))
+
+            for j, p2 in enumerate(possible_moves2):
+                self.set_move(p2[0], p2[1], current_player)
+                no_of_whites, no_of_blacks = self.count_pieces()
+
+                key = str(i) + ':' + str(j)
+
+                if current_player == 'W':
+                    rewards.update({key: no_of_whites})
+                else:
+                    rewards.update({key: no_of_blacks})
+
+                history.update({key: (p1, p2)})
+
+                self.board = copy.deepcopy(backup_board2)
+
+            self.board = copy.deepcopy(backup_board1)
+
+        final_decisions = list()
+        max_reward = -1
+
+        if len(rewards) > 0 and len(history) > 0:
+            for r in rewards:
+                v = rewards.get(r)
+                if v > max_reward:
+                    final_decisions = [[r, v]]
+                    max_reward = v
+                elif v == max_reward:
+                    final_decisions.append([r, v])
+
+            np.random.shuffle(final_decisions)
+
+            decision = final_decisions[0]
+            best_move = history.get(decision[0])[0]
+
+            self.set_move(best_move[0], best_move[1], current_player)
+            return best_move
+
+        return None
+
     # ---------------------- MINI MAX -------------------------------------------
 
     # Transform a position from possible moves into a state for computer
