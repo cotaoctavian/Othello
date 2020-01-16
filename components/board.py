@@ -4,8 +4,8 @@ import random
 import copy
 import numpy as np
 
-white_circle = pygame.image.load(os.path.join('../assets', 'white.png'))
-black_circle = pygame.image.load(os.path.join('../assets', 'black.png'))
+white_circle = pygame.image.load(os.path.join('C:\\Users\\octav\\Othello\\assets', 'white.png'))
+black_circle = pygame.image.load(os.path.join('C:\\Users\\octav\\Othello\\assets', 'black.png'))
 
 
 # Draw table
@@ -566,7 +566,7 @@ class Board:
             return True
 
     def best_move_random_pick(self):
-        possible_moves = list(self.generate_possible_moves("B", self.board, True))
+        possible_moves = list(self.generate_possible_moves("W", self.board, True))
         temp_moves = []
         # 1.
         for move in possible_moves:
@@ -608,7 +608,7 @@ class Board:
         move = list(self.best_move_random_pick())
         x = move[0]
         y = move[1]
-        self.board[x, y] = "W"
+        self.set_move(x, y, "W")
         return x, y
 
     # ---------------- LOCAL MAXIMIZATION -------------------------------------

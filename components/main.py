@@ -32,21 +32,22 @@ def run_game(delay=None):
                 if player == "B":
                     # The turn of the human player
                     positions = table.generate_possible_moves(player, None, False)
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        pos_x, pos_y = pygame.mouse.get_pos()
-                        pos_x //= 100
-                        pos_y //= 100
-                        if (pos_y, pos_x) in positions:
-                            table.set_move(pos_y, pos_x, player)
-                            player = 'W'
-                            last_position = (pos_y, pos_x)
-                            positions.clear()
-                            if delay is not None and delay != 0:
-                                surface.fill((255, 255, 255))
-                                board.draw_table(surface)
-                                table.draw(surface, last_position)
-                                pygame.display.flip()
-                                pygame.time.wait(delay)
+                    if len(positions) is not None:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            pos_x, pos_y = pygame.mouse.get_pos()
+                            pos_x //= 100
+                            pos_y //= 100
+                            if (pos_y, pos_x) in positions:
+                                table.set_move(pos_y, pos_x, player)
+                                player = 'W'
+                                last_position = (pos_y, pos_x)
+                                positions.clear()
+                                if delay is not None and delay != 0:
+                                    surface.fill((255, 255, 255))
+                                    board.draw_table(surface)
+                                    table.draw(surface, last_position)
+                                    pygame.display.flip()
+                                    pygame.time.wait(delay)
                 else:
                     # The turn of the computer
                     last_position = table.random_strategy()
@@ -70,4 +71,4 @@ def run_game(delay=None):
 
 
 if __name__ == '__main__':
-    run_game(delay=750)
+    run_game(delay=500)
